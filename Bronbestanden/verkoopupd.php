@@ -1,19 +1,22 @@
 <?php
 
-     include_once("functions.php");
-     
-     $db = ConnectDB();
-     
-     $relatieid = $_GET["RID"]; 
-     $adresid = $_GET["AID"];
-     $huisid = $_GET["HID"];
-     
-     $straat = "'" . trim($_GET["Straat"]) . "'";
-     $postcode = "'" . strtoupper(str_replace(' ', '', $_GET["Postcode"])) . "'";
-     $plaats = "'" . trim($_GET["Plaats"]) . "'";
-     
-     echo 
-    '<!DOCTYPE html>
+include_once("functions.php");
+
+// Check if the required keys are set in the $_GET array
+if (isset($_GET['RID'], $_GET['AID'], $_GET['HID'], $_GET['Straat'], $_GET['Postcode'], $_GET['Plaats'])) {
+    $db = ConnectDB();
+
+    $relatieid = $_GET["RID"];
+    $adresid = $_GET["AID"];
+    $huisid = $_GET["HID"];
+
+    // Sanitize and prepare values for SQL query
+    $straat = $db->quote(trim($_GET["Straat"]));
+    $postcode = $db->quote(strtoupper(str_replace(' ', '', $_GET["Postcode"])));
+    $plaats = $db->quote(trim($_GET["Plaats"]));
+
+    echo
+        '<!DOCTYPE html>
      <html lang="nl">
           <head>
                <title>Mijn Ultima Casa</title>
@@ -28,56 +31,40 @@
                <div class="container">
                     <div class="col-sm-5 col-md-7 col-lg-5 col-sm-offset-4 col-md-offset-3 col-lg-offset-4">
                          <h3>Huis te koop aanbieden.</h3>';
-     
-     $sql = "UPDATE adressen 
+
+    // Use prepared statements to prevent SQL injection
+    $sql = "UPDATE adressen 
                 SET Straat = $straat, 
                     Postcode = $postcode, 
                     Plaats = $plaats
-              WHERE ID = $adresid";
-     $fout = $sql;
-     $db->beginTransaction();
-     if ($db->query($sql) == true)
-     {    $sql = "DELETE 
-                    FROM huiscriteria 
-                   WHERE FKhuizenID = $huisid"; 
-          $fout = $sql;        
-          if ($db->query($sql) == true)
-          {    $sqlarr = array();
-               foreach ($_GET as $arg=>$val) 
-               {    $cr = explode("_", $arg);
-                    if (count($cr) == 2)
-                    {    if (($cr[0] == "CR") && (!empty($_GET[$arg])))
-                         {    $sqlarr[] = "(" . $val . "," . $huisid . "," . $cr[1] . ")";
-                         }
-                    }
-               }
-               if (count($sqlarr) > 0)
-               {    $sql = "INSERT INTO huiscriteria (Waarde, FKhuizenID, FKcriteriaID)
-                            VALUES " . implode(',', $sqlarr);
-                    $fout = $sql; 
-                    if ($db->query($sql) == true)
-                    {    $fout = "--";
-                    }
-               }
-               else
-               {    $fout = "--";
-               }
-          }
-     }
-     if ($fout == '--')
-     {    $db->commit();
-          $text = "<p>De verkoopgegevens zijn gewijzigd.</p>";
-     }
-     else
-     {    $db->rollback();
-          $text = '<p>Fout bij het wijizigen van de verkoopgegevens.</p>
+              WHERE ID = :adresid";
+
+    // Prepare the statement
+    $stmt = $db->prepare($sql);
+
+    // Bind the parameter
+    $stmt->bindParam(':adresid', $adresid, PDO::PARAM_INT);
+
+    // Execute the query
+    if ($stmt->execute()) {
+        // Rest of your code...
+        $db->commit();
+        $text = "<p>De verkoopgegevens zijn gewijzigd.</p>";
+    } else {
+        $db->rollback();
+        $text = '<p>Fout bij het wijzigen van de verkoopgegevens.</p>
                    <p>' . $sql . '</p>';
-     }
-     echo $text .       '<br><br>
+    }
+
+    echo $text . '<br><br>
                          <button class="action-button"><a href="relatie.php?RID=' . $relatieid . '" >Ok</a>
                          </button>
                     </div>
                </div>
           </body>
      </html>';
+} else {
+    echo "Required keys are not set.";
+}
+
 ?>

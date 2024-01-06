@@ -8,7 +8,6 @@ $ID = isset($_GET["upd"]) ? $_GET["upd"] : null;
 $rolID = isset($_GET["Rol"]) ? $_GET["Rol"] : null;
 
 if ($relatieID === null || $ID === null || $rolID === null) {
-    // Handle the case where required parameters are not provided
     echo "Invalid parameters.";
     exit;
 }

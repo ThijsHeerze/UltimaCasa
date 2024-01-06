@@ -4,15 +4,22 @@
      
      $db = ConnectDB();
      
-     $relatieid = $_GET['RID'];
-     $sql = "   SELECT ID, 
-                       Naam, 
-                       Email, 
-                       Telefoon
-                  FROM relaties
-                 WHERE ID = " . $relatieid;
+     $relatieid = isset($_GET['RID']) ? $_GET['RID'] : '';
+     $sql = "SELECT ID, Naam, Email, Telefoon
+             FROM relaties
+             WHERE ID = :relatieid";
      
-     $gegevens = $db->query($sql)->fetch();
+     // Prepare the statement
+     $stmt = $db->prepare($sql);
+     
+     // Bind the parameter
+     $stmt->bindParam(':relatieid', $relatieid, PDO::PARAM_INT);
+     
+     // Execute the query
+     $stmt->execute();
+     
+     $gegevens = $stmt->fetch();
+     
      
      echo 
     '<!DOCTYPE html>

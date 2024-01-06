@@ -7,7 +7,6 @@ $ID = isset($_GET["rel"]) ? $_GET["rel"] : null;
 $relatieid = isset($_GET["RID"]) ? $_GET["RID"] : null;
 
 if ($ID === null || $relatieid === null) {
-    // Handle the case where required parameters are not provided
     echo "Invalid parameters.";
     exit;
 }
