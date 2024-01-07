@@ -1,26 +1,43 @@
 <?php
-
      include_once("functions.php");
-     
+
+     function getCurrentUserId() {
+     session_start();
+     return isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+     }
+
+     function authorizeAdmin($userId) {
+     return $userId === 1; 
+     }
+
+     // Check if the user is authenticated
+     $userId = getCurrentUserId();
+
+     if (!$userId) {
+     header("Location: login.php");
+     exit();
+     }
+
+     if (!authorizeAdmin($userId)) {
+     header("Location: unauthorized.php");
+     exit();
+     }
+
      $db = ConnectDB();
-     
+
      $relatieid = isset($_GET['RID']) ? $_GET['RID'] : '';
      $sql = "SELECT ID, Naam, Email, Telefoon
-             FROM relaties
-             WHERE ID = :relatieid";
-     
-     // Prepare the statement
+          FROM relaties
+          WHERE ID = :relatieid";
+
      $stmt = $db->prepare($sql);
-     
-     // Bind the parameter
+
      $stmt->bindParam(':relatieid', $relatieid, PDO::PARAM_INT);
-     
-     // Execute the query
+
      $stmt->execute();
-     
+
      $gegevens = $stmt->fetch();
-     
-     
+
      echo 
     '<!DOCTYPE html>
      <html lang="nl">

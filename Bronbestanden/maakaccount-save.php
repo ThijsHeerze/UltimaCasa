@@ -1,5 +1,3 @@
-
-     
 <?php
 include_once("functions.php");
 
@@ -27,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
           
           if ($db->query($sql) == true) {   
-                
+
                if (StuurMail($email, 
                     "Account gegevens Ultima Casa", 
                     "Uw inlog gegevens zijn:
