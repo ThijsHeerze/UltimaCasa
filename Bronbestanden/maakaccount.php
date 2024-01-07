@@ -1,7 +1,7 @@
 <?php
-     include_once("functions.php");
-     
-     echo '
+include_once("functions.php");
+
+echo '
 <!DOCTYPE html>
 <html lang="nl">
      <head>
@@ -26,7 +26,7 @@
                          <tr>
                               <td>&nbsp;</td>
                               <td>               
-                                   <form action="maakaccount-save.php" method="GET">
+                                   <form action="maakaccount-save.php" method="POST" onsubmit="return validatePassword()">
                                         <div class="form-group">
                                              <label for="Naam">Naam:</label>
                                              <input type="text" class="form-control" id="Naam" name="Naam" placeholder="Naam" required>
@@ -38,7 +38,9 @@
                                         </div>
                                         <div class="form-group">
                                              <label for="Wachtwoord">Wachtwoord:</label>
-                                             <input type="password" class="form-control" id="Wachtwoord" name="Wachtwoord" placeholder="Wachtwoord" required>
+                                             <input type="password" class="form-control" id="Wachtwoord" name="Wachtwoord" 
+                                                    placeholder="Wachtwoord" required 
+                                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}">
                                         </div>
                                         <div class="form-group">
                                              <label for="Telefoon">Mobiel telefoonnummer:</label>
@@ -57,7 +59,20 @@
                     </table>
                </div>
           </div>
+
+          <script>
+               function validatePassword() {
+                    var password = document.getElementById("Wachtwoord").value;
+                    var passwordPattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/;
+
+                    if (!passwordPattern.test(password)) {
+                         alert("Het wachtwoord moet minimaal 8 tekens hebben, minimaal 1 hoofdletter, 1 cijfer, en 1 speciaal teken.");
+                         return false;
+                    }
+
+                    return true;
+               }
+          </script>
      </body>
 </html>';
-
 ?>

@@ -1,46 +1,55 @@
-<?php
-     include_once("functions.php");
 
+     
+<?php
+include_once("functions.php");
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
      $db = ConnectDB();
      
-     $naam = $_GET['Naam'];
-     $email = $_GET['Email'];
-     $telefoon = $_GET['Telefoon'];
-     $wachtwoord = $_GET['Wachtwoord'];
+     $naam = $_POST['Naam'];
+     $email = $_POST['Email'];
+     $telefoon = $_POST['Telefoon'];
+     $wachtwoord = $_POST['Wachtwoord'];
      
+     $hashedPassword = password_hash($wachtwoord, PASSWORD_DEFAULT);
+
      $sql = "INSERT INTO relaties (Naam, Email, Telefoon, Wachtwoord, FKrollenID)
-                  VALUES ('" . $naam . "', '" . 
-                               $email . "', '" .
-                               $telefoon . "', '" . 
-                               md5($wachtwoord) . "', '" . 
-                               10 . "')";
-     
-     
-     if ($db->query($sql) == true) 
-     {    if (StuurMail($email, 
-                        "Account gegevens Ultima Casa", 
-                        "Uw inlog gegevens zijn:
-                        
-               Naam: " . $naam . "
-               E-mailadres: " . $email . "
-               Telefoon: " . $telefoon . "
-               Wachtwoord: " . $wachtwoord . "
-               
-               Bewaar deze gegevens goed!
-               
-               Met vriendelijke groet,
-               
-               Het Ultima Casa team.",
-                        "From: noreply@uc.nl"))
-          {    $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
-          }
-          else
-          {    $result = 'Fout bij het versturen van de e-mail met uw gegevens.';
-          }
+               VALUES (:naam, :email, :telefoon, :wachtwoord, :fkrollenid)";
+
+     $stmt = $db->prepare($sql);
+     $stmt->bindParam(':naam', $naam, PDO::PARAM_STR);
+     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+     $stmt->bindParam(':telefoon', $telefoon, PDO::PARAM_STR);
+     $stmt->bindParam(':wachtwoord', $hashedPassword, PDO::PARAM_STR);
+     $stmt->bindValue(':fkrollenid', 10, PDO::PARAM_INT);
+
+     if ($stmt->execute()) {
+          $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
+          
+          if ($db->query($sql) == true) {   
+                
+               if (StuurMail($email, 
+                    "Account gegevens Ultima Casa", 
+                    "Uw inlog gegevens zijn:
+                         
+                    Naam: " . $naam . "
+                    E-mailadres: " . $email . "
+                    Telefoon: " . $telefoon . "
+                    Wachtwoord: " . $wachtwoord . "
+                    
+                    Bewaar deze gegevens goed!
+                    
+                    Met vriendelijke groet,
+                    
+                    Het Ultima Casa team.",
+                         "From: noreply@uc.nl"))
+               {    
+                    $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
+               }
+               } else {
+                    $result = 'Fout bij het bewaren van uw gegevens.';
+               }
+     echo $result;
      }
-     else
-     {    $result .= 'Fout bij het bewaren van uw gegevens.<br><br>' . $sql;
-     }
-     echo $result . '<br><br>
-          <button class="action-button"><a href="index.html">Ok</a></button>';
+}
 ?>
