@@ -1,46 +1,25 @@
 <?php
-include_once("functions.php");
-
-$db = ConnectDB();
-
-$relatieid = $_GET['RID'];
-
-$filtered = 0;
-$filter = "relaties.ID = " . $relatieid . " AND (StatusCode < 100)";
-$datum = "";
-$bod = "";
-$zoek = "";
-$params = array();
-
-// ... (Your existing code for setting $datum, $bod, $zoek)
-
-if (!empty($zoek)) {
-    $filter .= " AND CONCAT_WS('', StartDatum, Datum, Bod, Status, Straat, Postcode, Plaats) LIKE :zoek";
-    $params[':zoek'] = '%' . $zoek . '%';
-}
-
-// Construct the SQL query after setting conditions
-$sql = "SELECT biedingen.ID as TKID,
-           StartDatum,
-           IF(Bod, Datum, '&nbsp;') AS Datum,
-           CONCAT('&euro; ', Bod) AS Bod,
-           Straat,
-           CONCAT(LEFT(Postcode, 4), ' ', RIGHT(Postcode, 2), ', ', Plaats) as Plaats,
-           Status, 
-           biedingen.FKhuizenID AS HID,
-           huizen.FKRelatiesID as RID
-      FROM biedingen
- LEFT JOIN relaties ON relaties.ID = biedingen.FKRelatiesID 
- LEFT JOIN huizen on huizen.ID = biedingen.FKhuizenID
- LEFT JOIN statussen ON statussen.ID = biedingen.FKstatussenID
-     WHERE " . $filter . "
- ORDER BY Datum";
-
-// Prepare and execute the query using PDO
-$stmt = $db->prepare($sql);
-$stmt->execute($params);
-
-$kopen = $stmt->fetchAll();
+     include_once("functions.php");
+     
+     $relatieid = $_GET['RID'];
+     
+     $filtered = 0;
+     $filter = "relaties.ID = " . $relatieid;
+     $datum = "";
+     $bod = "";
+     $zoek = "";
+     if (isset($_GET['Datum']) && !empty($_GET['Datum']))
+     {    $datum = $_GET['Datum'];
+          $filtered = 1;
+     };
+     if (isset($_GET['Bod']) && !empty($_GET['Bod']))
+     {    $bod = $_GET['Bod'];
+          $filtered = 1;
+     };
+     if (isset($_GET['Zoek']) && !empty($_GET['Zoek']))
+     {    $zoek = $_GET['Zoek'];
+          $filtered = 1;
+     };
      
      if (!empty($datum))
      {    $filter .= " AND StartDatum > '" . $datum . "'";

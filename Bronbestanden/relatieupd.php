@@ -8,6 +8,17 @@ if (isset($_GET["ID"], $_GET["upd"])) {
     $id = $_GET["ID"];
     $relatieID = $_GET["upd"];
 
+    // Validate and sanitize user inputs
+    $naam = filter_input(INPUT_GET, 'Naam', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_GET, 'Email', FILTER_VALIDATE_EMAIL);
+    $telefoon = filter_input(INPUT_GET, 'Telefoon', FILTER_SANITIZE_STRING);
+
+    if ($naam === false || $email === false || $telefoon === false) {
+        // Handle invalid input
+        echo "Invalid input data.";
+        exit;
+    }
+
     echo '
     <!DOCTYPE html>
     <html lang="nl">
@@ -38,9 +49,9 @@ if (isset($_GET["ID"], $_GET["upd"])) {
     $sql .= "WHERE ID = :relatieID";
 
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':naam', $_GET['Naam']);
-    $stmt->bindParam(':email', $_GET['Email']);
-    $stmt->bindParam(':telefoon', $_GET['Telefoon']);
+    $stmt->bindParam(':naam', $naam);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':telefoon', $telefoon);
     $stmt->bindParam(':relatieID', $relatieID);
 
     if (!empty($_GET["Wachtwoord"])) {
@@ -50,13 +61,13 @@ if (isset($_GET["ID"], $_GET["upd"])) {
     if ($stmt->execute()) {
         // Send email securely
         $emailSent = StuurMail(
-            $_GET['Email'],
+            $email,
             "Wijziging gegevens Ultima Casa account",
             "Uw gegevens zijn als volgt gewijzigd:
 
-            Naam: " . $_GET["Naam"] . "
-            E-mailadres: " . $_GET["Email"] . "
-            Telefoon: " . $_GET["Telefoon"] . "
+            Naam: " . $naam . "
+            E-mailadres: " . $email . "
+            Telefoon: " . $telefoon . "
             Wachtwoord: " . $wachtwoord . "
             
             Bewaar deze gegevens goed!
@@ -74,7 +85,7 @@ if (isset($_GET["ID"], $_GET["upd"])) {
         }
     } else {
         echo '<p>Fout bij het bewaren van uw account gegevens.</p>
-              <p>' . $stmt->errorInfo()[2] . '</p>';
+              <p>' . htmlspecialchars($stmt->errorInfo()[2]) . '</p>';
     }
 
     echo '<br><br>
