@@ -3,29 +3,36 @@
      
      $db = ConnectDB();
      
-     $huizenid = $_GET['HID'];
-     $relatieid = $_GET['RID'];
-     
+     $huizenid = filter_input(INPUT_GET, 'HID', FILTER_SANITIZE_NUMBER_INT);
+     $relatieid = filter_input(INPUT_GET, 'RID', FILTER_SANITIZE_NUMBER_INT);
+
      $sql = "SELECT ID as AID, StartDatum, FKrelatiesID, Straat, Postcode, Plaats
-               FROM huizen
-              WHERE huizen.ID = $huizenid";
-     $huis = $db->query($sql)->fetch();
-     
-     $sql = "  SELECT * FROM criteria cr
-             LEFT JOIN (SELECT ID as HCID, FKcriteriaID, FKhuizenID, Waarde FROM huiscriteria 
-                         WHERE FKhuizenID = $huizenid) AS hc ON hc.FKcriteriaID = cr.ID
-                WHERE cr.Type = 1
-             ORDER BY Volgorde";
-     
-     $crwaarde = $db->query($sql)->fetchAll();
-     
-     $sql = "  SELECT * FROM criteria cr
-             LEFT JOIN (SELECT ID as HCID, FKcriteriaID, FKhuizenID, Waarde FROM huiscriteria 
-                         WHERE FKhuizenID = $huizenid) AS hc ON hc.FKcriteriaID = cr.ID
-                WHERE cr.Type = 2
-             ORDER BY Volgorde";
-     
-     $crjanee = $db->query($sql)->fetchAll();
+          FROM huizen
+          WHERE huizen.ID = :huizenid";
+     $stmt = $db->prepare($sql);
+     $stmt->bindParam(':huizenid', $huizenid, PDO::PARAM_INT);
+     $stmt->execute();
+     $huis = $stmt->fetch();
+
+     $sql = "SELECT * FROM criteria cr
+          LEFT JOIN (SELECT ID as HCID, FKcriteriaID, FKhuizenID, Waarde FROM huiscriteria 
+                    WHERE FKhuizenID = :huizenid) AS hc ON hc.FKcriteriaID = cr.ID
+          WHERE cr.Type = 1
+          ORDER BY Volgorde";
+     $stmt = $db->prepare($sql);
+     $stmt->bindParam(':huizenid', $huizenid, PDO::PARAM_INT);
+     $stmt->execute();
+     $crwaarde = $stmt->fetchAll();
+
+     $sql = "SELECT * FROM criteria cr
+          LEFT JOIN (SELECT ID as HCID, FKcriteriaID, FKhuizenID, Waarde FROM huiscriteria 
+                    WHERE FKhuizenID = :huizenid) AS hc ON hc.FKcriteriaID = cr.ID
+          WHERE cr.Type = 2
+          ORDER BY Volgorde";
+     $stmt = $db->prepare($sql);
+     $stmt->bindParam(':huizenid', $huizenid, PDO::PARAM_INT);
+     $stmt->execute();
+     $crjanee = $stmt->fetchAll();
          
      echo 
     '<!DOCTYPE html>

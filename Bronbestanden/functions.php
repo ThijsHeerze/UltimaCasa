@@ -1,7 +1,7 @@
 <?php
 
 include_once("DBUC.php");
-//include("includes/sessions.php");
+include("includes/sessions.php");
 
 $telefoonpattern = "^(?:0|\(?\+31\)?\s?|0031\s?)[1-79](?:[\.\-\s]?\d\d){4}$";
 

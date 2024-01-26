@@ -3,21 +3,17 @@
      
      $db = ConnectDB();
      
-     $relatieid = $_GET['RID'];
-     
-     $sql = "SELECT ID, Criterium, Type
-               FROM criteria
-              WHERE Type = 1
-           ORDER BY Volgorde";
-     
-     $crwaarde = $db->query($sql)->fetchAll();
-     
-     $sql = "SELECT ID, Criterium, Type
-               FROM criteria
-              WHERE Type = 2
-           ORDER BY Volgorde";
-     
-     $crjanee = $db->query($sql)->fetchAll();
+     $relatieid = filter_input(INPUT_GET, 'RID', FILTER_SANITIZE_NUMBER_INT);
+
+     $sql = "SELECT ID, Criterium, Type FROM criteria WHERE Type = 1 ORDER BY Volgorde";
+     $stmt = $db->prepare($sql);
+     $stmt->execute();
+     $crwaarde = $stmt->fetchAll();
+
+     $sql = "SELECT ID, Criterium, Type FROM criteria WHERE Type = 2 ORDER BY Volgorde";
+     $stmt = $db->prepare($sql);
+     $stmt->execute();
+     $crjanee = $stmt->fetchAll();
      
      echo 
     '<!DOCTYPE html>

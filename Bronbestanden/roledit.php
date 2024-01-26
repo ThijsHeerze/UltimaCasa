@@ -29,8 +29,8 @@ echo '
             <h3>Rol wijzigen</h3>';
 
 $sql = "SELECT Naam, Omschrijving, Waarde, Landingspagina
-            FROM rollen 
-            WHERE ID = :id";
+        FROM rollen 
+        WHERE ID = :id";
 $stmt = $db->prepare($sql);
 $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 $stmt->execute();

@@ -1,5 +1,4 @@
 <?php
-
 include_once("functions.php");
 
 $db = ConnectDB();
@@ -17,7 +16,7 @@ if ($ID !== null) {
         echo 'De rol is verwijderd';
     } else {
         echo 'Fout bij het verwijderen van de rol.<br><br>';
-        print_r($stmt->errorInfo());  // Print the error information for debugging
+        print_r($stmt->errorInfo());
     }
 } else {
     echo 'Error: ID not set.';

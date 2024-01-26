@@ -1,5 +1,4 @@
 <?php
-
 include_once("functions.php");
 
 $db = ConnectDB();
@@ -23,7 +22,7 @@ if ($relatieid !== null && $naam !== null && $omschrijving !== null && $waarde !
         echo 'De rol is toegevoegd.';
     } else {
         echo 'Fout bij het toevoegen van deze rol.<br><br>';
-        print_r($stmt->errorInfo());  // Print the error information for debugging
+        print_r($stmt->errorInfo());
     }
 } else {
     echo 'Error: Missing parameters.';
