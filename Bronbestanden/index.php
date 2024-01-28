@@ -1,10 +1,11 @@
 <?php
 include_once('functions.php');
-//session_start();
 
 $noaccount = "";
 if (isset($_GET["NOAccount"])) {
-    $noaccount = "<h4 class='accent'><br>Onjuiste E-mail/Wachtwoord combinatie.<br><br></h4>";
+    $noaccount = "<div class='alert alert-danger' role='alert'>
+                     Onjuiste E-mail/Wachtwoord combinatie. Controleer uw gegevens en probeer het opnieuw.
+                  </div>";
 }
 
 echo '

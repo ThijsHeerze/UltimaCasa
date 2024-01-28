@@ -24,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($stmt->execute()) {
         $result = 'De gegevens zijn naar uw e-mail adres verstuurd.';
 
-        // Remove the unnecessary query execution here
         if (StuurMail($email,
             "Account gegevens Ultima Casa",
             "Uw inlog gegevens zijn:
