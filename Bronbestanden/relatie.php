@@ -98,23 +98,31 @@
                   FROM relaties
              LEFT JOIN rollen ON rollen.ID = relaties.FKrollenID
                  WHERE Waarde BETWEEN 30 AND 39 
-                 LIMIT 1"; // de eerste makelaar van Ultima Casa
+                 LIMIT 1";
      
      $makelaar = $db->query($sql)->fetch();
      
      echo '
-          <!DOCTYPE html>
-          <html lang="nl">
-          <head>
-               <title>Mijn Ultima Casa</title>
-               <meta charset="utf-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1">
-               <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-               <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-               <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-               <link rel="stylesheet" type="text/css" href="ucstyle.css?' . mt_rand() . '">
-          </head>
-          <body>
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <title>Mijn Ultima Casa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        // Voeg JavaScript toe om het eerste tabblad actief te maken na bevestiging van de actie
+        $(document).ready(function(){
+            $("#bevestigKnop").click(function(){
+                $(".nav-tabs a[href=\'#kopen\']").tab("show");
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="ucstyle.css?' . mt_rand() . '">
+</head>
+<body>
                <div class="container">' .
                     InlogKop($relatieid, "Mijn Ultima Casa", 
                                          '<td>
