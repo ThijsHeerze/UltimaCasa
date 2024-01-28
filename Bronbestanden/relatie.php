@@ -1,5 +1,11 @@
 <?php
      include_once("functions.php");
+
+     $relatieid = filter_input(INPUT_GET, 'RID', FILTER_SANITIZE_NUMBER_INT);
+
+     if (!is_numeric($relatieid)) {
+          exit("Invalid ID");
+     }
      
      $relatieid = $_GET['RID'];
      
