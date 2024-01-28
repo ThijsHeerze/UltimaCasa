@@ -23,7 +23,6 @@
           <div class="col-sm-5 col-md-7 col-lg-5 col-sm-offset-4 col-md-offset-3 col-lg-offset-4">
           <h3>Relatie verwijderen</h3>';
 
-     // Use prepared statement to prevent SQL injection
      $sql = "DELETE FROM relaties WHERE ID = :ID";
      $stmt = $db->prepare($sql);
      $stmt->bindParam(':ID', $ID);
