@@ -20,7 +20,7 @@ if ($email !== null && $password !== null) {
 
     $redirect_url = 'index.php?NOAccount';
     if ($inlog && password_verify($password, $inlog['Wachtwoord'])) {
-        $_SESSION['user'] = $inlog['RID']; // Set a meaningful value for user session
+        $_SESSION['user'] = $inlog['RID'];
         header("Location: " . $inlog['Landingspagina'] . '?RID=' . $inlog['RID']);
         exit();
     } else {
@@ -29,6 +29,5 @@ if ($email !== null && $password !== null) {
     }
 } else {
     echo 'Error: Missing parameters.';
-    // Handle the case where required parameters are not provided
 }
 ?>

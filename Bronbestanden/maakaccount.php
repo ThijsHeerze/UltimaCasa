@@ -27,26 +27,46 @@ echo '
                               <td>&nbsp;</td>
                               <td>               
                                    <form action="maakaccount-save.php" method="POST" onsubmit="return validatePassword()">
-                                   <div class="form-group">
-                                   <label for="Consent">
-                                        <input type="checkbox" id="Consent" name="Consent" required>
-                                        Ik geef toestemming voor het verwerken van mijn persoonlijke gegevens.
-                                   </label>
-                              </div>
+                                        <div class="form-group">
+                                             <label for="Naam">Naam:</label>
+                                             <input type="text" class="form-control" id="Naam" name="Naam" placeholder="Naam" required>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="Email">E-mailadres:</label>
+                                             <input type="email" class="form-control" id="Email" name="Email" placeholder="E-mailadres" required
+                                             pattern="' . $emailpattern . '">
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="Wachtwoord">Wachtwoord:</label>
+                                             <input type="password" class="form-control" id="Wachtwoord" name="Wachtwoord" 
+                                                    placeholder="Wachtwoord" required 
+                                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}">
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="Telefoon">Mobiel telefoonnummer:</label>
+                                             <input type="tel" class="form-control" id="Telefoon" name="Telefoon" 
+                                                    placeholder="Telefoonnummer" 
+                                                    pattern="' . $telefoonpattern . '" required>
+                                        </div>
+                                        <div class="form-group">
+                                             <label for="Consent">
+                                                  <input type="checkbox" id="Consent" name="Consent" required>
+                                                  Ik geef toestemming voor het verwerken van mijn persoonlijke gegevens.
+                                             </label>
+                                        </div>   
+                                        <div class="form-group"><br><br>
+                                             <button type="submit" class="action-button" title="Uw account aanmaken">Maak account</button>
+                                             <button class="action-button"><a href="index.html" >Annuleren</a></button>
+                                        </div>
+                                   </form>
+                              </td>
+                              <td>&nbsp;</td>
+                         </tr>
+                    </table>
+               </div>
+          </div>
 
-                              <div class="form-group"><br><br>
-                                   <button type="submit" class="action-button" title="Uw account aanmaken">Maak account</button>
-                                   <button class="action-button"><a href="index.html" >Annuleren</a></button>
-                              </div>
-                         </form>
-                    </td>
-                    <td>&nbsp;</td>
-               </tr>
-          </table>
-     </div>
-</div>
-
-<script>
+          <script>
      function validatePassword() {
           var password = document.getElementById("Wachtwoord").value;
           var passwordPattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/;
@@ -65,6 +85,6 @@ echo '
           return true;
      }
 </script>
-</body>
+     </body>
 </html>';
 ?>

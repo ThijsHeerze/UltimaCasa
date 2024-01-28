@@ -1,6 +1,6 @@
 <?php
-//include_once('functions.php');
-session_start();
+include_once('functions.php');
+//session_start();
 
 $noaccount = "";
 if (isset($_GET["NOAccount"])) {
